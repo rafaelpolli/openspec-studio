@@ -1,0 +1,22 @@
+{
+  "name": "@studio/server",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "bun test",
+    "dev": "STUDIO_DEV_ORIGIN=http://127.0.0.1:5173 bun --watch src/index.ts",
+    "start": "bun src/index.ts"
+  },
+  "dependencies": {
+    "@devcontainers/cli": "0.89.0",
+    "@opencode-ai/sdk": "1.19.4",
+    "@studio/shared": "workspace:*",
+    "hono": "^4.13.14",
+    "opencode-ai": "1.19.4",
+    "zod": "^4.6.7"
+  }
+}

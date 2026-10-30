@@ -1,0 +1,40 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`2.1 prompts da exploração Contexto do workspace: the first prompt lists the code, the specs with their purpose, the changes and the title file 1`] = `
+"# Exploração
+
+## Código que você pode ler (somente leitura)
+
+- app: \`/w/app\`
+
+## Specs do workspace
+
+- \`change-apply\`: Executar as tasks de uma change.
+- \`workspaces\`: Registrar pastas.
+
+## Changes ativas
+
+- \`add-x\`
+
+## Título
+
+Depois de responder, escreva em \`/data/explore/w/e1/titulo.txt\` um título curto (até 6 palavras) para esta exploração, só o texto.
+
+## Mensagem do usuário
+
+o que do BMAD eu poderia incluir?"
+`;
+
+exports[`2.1 prompts da exploração the draft prompt asks for the JSON only, with decisions the user took 1`] = `
+"# Virar change
+
+O usuário quer transformar esta exploração numa change do OpenSpec. Não responda na conversa: escreva apenas o arquivo \`/data/explore/w/e1/rascunho.json\`, com este JSON:
+
+\`\`\`json
+{ "name": "add-exemplo", "description": "um a três parágrafos: o que construir e por quê", "decisions": [ { "question": "a decisão, em poucas palavras", "answer": "o que ficou decidido" } ] }
+\`\`\`
+
+- \`name\` em kebab-case, começando por um verbo como add, fix ou update.
+- \`decisions\` só com o que o usuário decidiu ou confirmou na conversa; nada que você apenas sugeriu.
+- Não escreva nenhum outro arquivo."
+`;

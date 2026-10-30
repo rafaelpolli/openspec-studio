@@ -1,0 +1,30 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Local data: the app keeps its database, engine credentials (auth.json) and run token
+# outside the repo, but never commit them if they end up here
+*.db
+*.db-*
+*.sqlite*
+auth.json
+run.json
+.studio/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Logs and test reports
+*.log
+test-results/
+playwright-report/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

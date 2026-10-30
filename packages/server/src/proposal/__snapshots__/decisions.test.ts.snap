@@ -1,0 +1,31 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`2.1 checkpoint de decisões the prompt asks for the JSON file only, from the description and the code 1`] = `
+"# Decisões em aberto da change \`add-export\`
+
+Antes de escrever qualquer artefato, leia a descrição e o código e liste as decisões que só o usuário pode tomar: escopo, comportamento visível, compatibilidade e critérios de aceite. Não liste detalhes de implementação que você mesmo pode decidir.
+
+## Descrição da change pelo usuário
+
+Exportar dados do usuário em CSV
+
+## Código que você pode ler (somente leitura)
+
+- api: \`/w/api\`
+
+## Saída
+
+Escreva apenas o arquivo \`/w/openspec/changes/add-export/.studio/decisoes.json\`, com este JSON:
+
+\`\`\`json
+{ "decisions": [ { "id": "campos", "question": "Quais campos entram no CSV?", "why": "uma linha sobre por que importa", "options": [ { "label": "Todos os campos do perfil" }, { "label": "Só nome e e-mail", "description": "opcional" } ], "recommended": 1 } ] }
+\`\`\`
+
+## Regras
+
+- De 0 a 8 decisões; \`{ "decisions": [] }\` quando não há nada a decidir.
+- Cada decisão tem pelo menos duas opções, e \`recommended\` é o índice (a partir de 0) da opção que você recomenda.
+- \`id\` em kebab-case, sem repetir.
+- Não escreva nenhum artefato nem outro arquivo nesta etapa.
+"
+`;

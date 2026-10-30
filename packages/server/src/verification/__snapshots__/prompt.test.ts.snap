@@ -1,0 +1,39 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`3.2 prompt e trace.json the prompt lists every scenario by id with its text, the members and the output file 1`] = `
+"# Verificação da change \`add-git\`
+
+Os artefatos da change estão em \`/r/openspec/changes/add-git\`. Para cada cenário abaixo, encontre no código dos membros o teste automatizado que exercita exatamente o comportamento descrito.
+
+## Membros (somente leitura)
+
+- studio: \`/w/studio\`
+
+## Cenários
+
+### \`git-repositories/Inicializar Git/Pré-visualização\`
+
+- **WHEN** Pré-visualização
+- **THEN** ok
+
+### \`git-repositories/Inicializar Git/Confirmar\`
+
+- **WHEN** Confirmar
+- **THEN** ok
+
+## Saída
+
+Escreva apenas o arquivo \`/data/verify/v1/trace.json\`, com este JSON:
+
+\`\`\`json
+{ "items": [ { "id": "<id do cenário>", "kind": "teste", "member": "<nome do membro>", "file": "<caminho relativo ao membro>", "line": 41, "name": "<nome do teste>", "note": "<opcional>" } ] }
+\`\`\`
+
+## Regras
+
+- Um item por cenário, com o \`id\` exatamente como acima.
+- \`kind\` é "teste" quando há um teste que exercita o cenário, "manual" quando o cenário não dá para automatizar (por exemplo, algo visual), e "sem-teste" quando dá para automatizar mas nenhum teste o exercita.
+- Para "teste": \`member\` é um destes nomes: \`studio\`; \`line\` é a linha onde o teste é declarado; \`name\` é o nome do teste copiado do código, sem os nomes dos \`describe\`.
+- Não aponte um teste só porque o arquivo trata do mesmo assunto: na dúvida, use "sem-teste" e explique em \`note\`.
+- Não escreva nenhum outro arquivo."
+`;

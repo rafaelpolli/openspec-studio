@@ -1,0 +1,344 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`discovery prompt (8.2) asks for the JSON file across every member 1`] = `
+"# Descoberta de capacidades
+
+Leia o código dos membros abaixo e liste as capacidades do sistema: comportamentos que um usuário ou outro sistema observa (por exemplo, autenticação ou exportação de relatórios), e não camadas técnicas (por exemplo, banco de dados ou utilitários).
+
+## Membros (somente leitura)
+
+- api: \`<DIR>/repo-api\`
+- web: \`<DIR>/repo-web\`
+
+## Saída
+
+Escreva apenas o arquivo \`<DIR>/work/job/capabilities.json\`, com este JSON:
+
+\`\`\`json
+{ "capabilities": [ { "name": "auth", "description": "Uma frase sobre o que a capacidade faz.", "locations": [ { "member": "<nome do membro>", "path": "<caminho relativo ao membro>" } ] } ] }
+\`\`\`
+
+## Regras
+
+- \`name\` em kebab-case (letras minúsculas, dígitos e hífen), sem repetir.
+- \`member\` é um destes nomes: \`api\`, \`web\`.
+- \`path\` aponta para um arquivo ou pasta onde a capacidade está implementada; uma capacidade pode ter locais em mais de um membro.
+- Prefira capacidades coesas, de 3 a 15 no total, cada uma documentável numa spec própria.
+- Não escreva nenhum outro arquivo.
+"
+`;
+
+exports[`baseline prompt (8.5) observable behavior, tests as source, evidence table, no tasks.md 1`] = `
+"# Baseline: auth (change \`baseline-auth\`)
+
+Documente o comportamento que já existe nesta capacidade. É uma baseline: não proponha mudanças nem novas funcionalidades.
+
+## Capacidade
+
+Login e sessão.
+
+Locais apontados na descoberta:
+
+- api: \`src/auth\` (\`<DIR>/repo-api/src/auth\`)
+- web: \`src/login.tsx\` (\`<DIR>/repo-web/src/login.tsx\`)
+
+## Arquivos a escrever
+
+Todos dentro de \`<DIR>/repo/openspec/changes/baseline-auth\`:
+
+1. \`proposal.md\`: por que documentar esta capacidade agora e o que a spec cobre.
+2. \`specs/auth/spec.md\`: começa com \`## Purpose\` (uma ou duas frases sobre o que a capacidade faz) e depois apenas \`## ADDED Requirements\`, cada requisito com pelo menos um cenário.
+3. \`design.md\`: como a capacidade funciona hoje, terminando com a seção abaixo, exatamente neste formato:
+
+\`\`\`markdown
+## Evidências
+
+| Requisito | Evidência | Fonte |
+|---|---|---|
+| <nome exato do requisito> | \`<membro>/<arquivo>:<linha>\`, \`<membro>/<arquivo>:<linha>\` | testado ou inferido |
+\`\`\`
+
+Não escreva \`tasks.md\`: a baseline não altera código.
+
+## Qualidade
+
+- Descreva comportamento observável (entradas, saídas, erros e efeitos visíveis), não a implementação (nomes de classes, funções ou bibliotecas).
+- Quando houver testes, derive os cenários deles e use \`testado\`, citando o \`arquivo:linha\` do teste.
+- Um requisito sem teste correspondente é \`inferido\`, citando o \`arquivo:linha\` do código que o sustenta.
+- Cada linha da tabela usa o nome exato de um \`### Requirement:\` da spec, e cada requisito tem uma linha.
+- Os caminhos das evidências começam pelo nome do membro, por exemplo \`api/src/auth.ts:42\`.
+
+## Código que você pode ler (somente leitura)
+
+- api: \`<DIR>/repo-api\`
+- web: \`<DIR>/repo-web\`
+
+## Instruções do OpenSpec
+
+### proposal
+
+Create the proposal document that establishes WHY this change is needed.
+
+Sections:
+- **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
+- **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**.
+- **Capabilities**: Identify which specs will be created or modified:
+  - **New Capabilities**: List capabilities being introduced. Each becomes a new \`specs/<capability-path>/spec.md\`. Name each capability for a durable system behavior (for example, \`user-auth\`), not the work in this change (for example, \`add-login-endpoint\`). Choose a cohesive boundary that can own related requirements as the system evolves; avoid broad catch-all capabilities. Use kebab-case for path segments you introduce (e.g., \`user-auth\` or \`identity/user-auth\`) and follow the project's existing spec organization.
+  - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Use the exact existing path under \`openspec/specs/\`. Leave empty if no requirement changes.
+- **Impact**: Affected code, APIs, dependencies, or systems.
+
+IMPORTANT: The Capabilities section is critical. It creates the contract between
+proposal and specs phases. Research existing specs before filling this in:
+run \`openspec list --specs\` for the project's capability inventory, then
+\`openspec show "<spec-id>" --type spec --json --no-scenarios\` for any that
+look related - that returns a capability's purpose and requirement texts
+without pulling whole spec files into context. Append \`--store "<id>"\` to
+both commands only for a registered standalone store, and keep \`--type
+spec\`: a change and a spec sharing a name is otherwise an ambiguous-item
+error. \`openspec list\` without \`--specs\` lists in-flight changes, not
+specs - it never shows what the project already covers. Reuse an existing
+capability's exact path instead of introducing a near-duplicate name.
+The filtered read is only an overview. Before deciding what is already
+covered or what should change, read each relevant spec in full, including
+scenarios, with \`openspec show "<spec-id>" --type spec\` (same \`--store\` rule).
+Each capability listed here will need a corresponding spec file.
+
+Every change must either declare at least one capability (new or
+modified) or explicitly opt out of specs: \`openspec validate\` rejects a
+change with zero deltas unless the change's \`.openspec.yaml\` sets
+\`skip_specs: true\`. Use \`skip_specs: true\` only when no spec-level
+behavior changes (pure refactor, tooling, docs) - specs describe
+behavior, so if behavior does not change, no spec should change either.
+Do not invent a requirement just to satisfy validation.
+
+Keep it concise (1-2 pages). Focus on the "why" not the "how" -
+implementation details belong in design.md.
+
+This is the foundation - specs, design, and tasks all build on this.
+
+Template:
+
+\`\`\`markdown
+# Proposal
+
+## Why
+
+<!-- Explain the motivation for this change. What problem does this solve? Why now? -->
+
+## What Changes
+
+<!-- Describe what will change. Be specific about new capabilities, modifications, or removals. -->
+
+## Capabilities
+
+### New Capabilities
+<!-- Capabilities being introduced. Name each capability for a cohesive system
+     behavior that can own related requirements as the system evolves. Do not name
+     implementation tasks or proposal sections. Avoid broad catch-all names. Use
+     kebab-case for path segments you introduce (e.g., user-auth or identity/user-auth)
+     that follow the project's existing spec organization. Each creates
+     specs/<capability-path>/spec.md. -->
+- \`<capability-path>\`: <brief description of what this capability covers>
+
+### Modified Capabilities
+<!-- Existing capabilities whose REQUIREMENTS are changing (not just implementation).
+     Only list here if spec-level behavior changes. Each needs a delta spec file.
+     Use the exact existing path under openspec/specs/. Leave empty if no requirement
+     changes. A change with no capabilities at all (pure refactor, tooling, docs)
+     must set \`skip_specs: true\` in its .openspec.yaml - openspec validate rejects
+     a zero-delta change without that marker. Do not invent a requirement just to
+     satisfy validation. -->
+- \`<existing-capability-path>\`: <what requirement is changing>
+
+## Impact
+
+<!-- Affected code, APIs, dependencies, systems -->
+\`\`\`
+
+### specs
+
+Create specification files that define WHAT the system should do.
+
+A spec is a behavior contract, not an implementation plan.
+
+Good spec content:
+- Observable behavior users or downstream systems rely on
+- Inputs, outputs, and error conditions
+- External constraints (security, privacy, reliability, compatibility)
+- Scenarios that can be tested or explicitly validated
+
+Avoid in specs:
+- Internal class/function names
+- Library or framework choices
+- Step-by-step implementation details
+- Detailed execution plans (those belong in design.md or tasks.md)
+
+Quick test: if the implementation can change without changing externally
+visible behavior, it likely does not belong in the spec.
+
+Create one spec file per capability listed in the proposal's Capabilities section.
+\`<capability-path>\` is the spec directory relative to \`specs/\` (for example,
+\`user-auth\` or \`identity/user-auth\`). Preserve the full path:
+- New capabilities: use the exact path from the proposal at \`specs/<capability-path>/spec.md\`. Any path segment newly introduced in the proposal must be kebab-case. Follow the project's existing organization; do not add a new domain level when the project uses a flat layout.
+- Modified capabilities: use the exact existing path from \`openspec/specs/<capability-path>/\` when creating the delta at \`specs/<capability-path>/spec.md\`. Run \`openspec list --specs\` to confirm that path before writing the delta, appending \`--store "<id>"\` only for a registered standalone store - a mistyped or invented path targets a capability that does not exist rather than the one you meant. Do not move or rename the capability.
+
+Write the spec files one at a time, so the user sees progress and an
+interrupted run keeps the files it already wrote:
+- Before writing anything, compare the capabilities the proposal lists
+  with the \`specs/<capability-path>/spec.md\` files that already exist,
+  and start with the first capability that has no file. Do not rewrite
+  an existing file unless the user asks you to.
+- Before each file, say in one line which capability you are writing.
+- Write each file as soon as you have drafted it. Do not plan every file
+  before writing the first.
+- Stop when every capability the proposal lists has its file.
+
+There must be at least one spec file unless the change's \`.openspec.yaml\`
+sets \`skip_specs: true\` (no spec-level behavior change) - \`openspec validate\`
+rejects a zero-delta change without that marker. If the proposal lists no
+capabilities and \`skip_specs\` is not set, revisit the proposal first.
+
+Delta operations (use ## headers):
+- **ADDED Requirements**: New capabilities
+- **MODIFIED Requirements**: Changed behavior - MUST include full updated content
+- **REMOVED Requirements**: Deprecated features - MUST include **Reason** and **Migration**
+- **RENAMED Requirements**: Name changes only - use FROM:/TO: format
+
+Format requirements:
+- Each requirement: \`### Requirement: <name>\` followed by description
+- Use SHALL/MUST for normative requirements (avoid should/may)
+- Each scenario: \`#### Scenario: <name>\` with WHEN/THEN format
+- **CRITICAL**: Scenarios MUST use exactly 4 hashtags (\`####\`). Using 3 hashtags or bullets will fail silently.
+- Every requirement MUST have at least one scenario.
+- Keep each requirement's description (the text between \`### Requirement:\` and its first scenario) to 500 characters or fewer. \`openspec validate\` flags longer descriptions in ADDED requirements and in the main spec. This is a warning: normal validation still passes, but \`openspec validate --strict\` fails on it. When writing a new requirement, state one behavior per requirement: move examples and edge cases into scenarios, and split a requirement that covers several behaviors into separate \`### Requirement:\` blocks, each with its own scenarios. Under MODIFIED, keep the existing requirement block whole; never split, trim or rewrite existing text just to meet the length. Split an existing long requirement only when the user asks for it, in a change made for that purpose: under MODIFIED, keep its header and every scenario and cut its description down to one behavior without changing its meaning, then add each behavior you removed as its own ADDED requirement with its own scenarios.
+
+New capabilities only: the delta spec's first section is \`## Purpose\` -
+one or two sentences (50+ characters, or \`openspec validate --strict\`
+reports it as too brief) describing what the capability is for. Archive
+copies it into the main spec it creates; without it the new main spec is
+left with a \`TBD ... Update Purpose after archive\` placeholder to fill in
+by hand. Do NOT add \`## Purpose\` to a delta for an existing capability -
+that spec already has one and the delta's is ignored. To change an
+existing capability's Purpose - including a leftover \`TBD\` placeholder -
+edit \`<planningHome.root>/openspec/specs/<capability-path>/spec.md\`
+directly. \`planningHome.root\` comes from the \`openspec instructions ...
+--json\` response. Always use it rather than a repo-relative path: it
+resolves to the store whenever the change lives in one - whether that
+came from \`--store\`, a project \`store:\` pointer, or a global default
+store - and to the current repository otherwise. Do not try to work out
+which case applies; the field already has.
+
+MODIFIED requirements workflow:
+1. Locate the existing requirement in \`<planningHome.root>/openspec/specs/<capability-path>/spec.md\` (the same store-aware root as above)
+2. Copy the ENTIRE requirement block (from \`### Requirement:\` through all scenarios)
+3. Paste under \`## MODIFIED Requirements\` and edit to reflect new behavior
+4. Ensure header text matches exactly (whitespace-insensitive)
+
+Common pitfall: Using MODIFIED with partial content loses detail at archive time.
+If adding new concerns without changing existing behavior, use ADDED instead.
+
+Example (a new capability, so its first section is \`## Purpose\`):
+\`\`\`
+# Spec Delta
+
+## Purpose
+
+Lets users take their data out of the product in a portable format.
+
+## ADDED Requirements
+
+### Requirement: User can export data
+The system SHALL allow users to export their data in CSV format.
+
+#### Scenario: Successful export
+- **WHEN** user clicks "Export" button
+- **THEN** system downloads a CSV file with all user data
+
+## REMOVED Requirements
+
+### Requirement: Legacy export
+**Reason**: Replaced by new export system
+**Migration**: Use new export endpoint at /api/v2/export
+\`\`\`
+
+Specs should be testable - each scenario is a potential test case.
+
+Template:
+
+\`\`\`markdown
+# Spec Delta
+
+## Purpose
+<!-- New capabilities only: one or two sentences (50+ characters) on what this capability is for. Delete this section for an existing capability. -->
+
+## ADDED Requirements
+
+### Requirement: <!-- requirement name -->
+<!-- requirement text -->
+
+#### Scenario: <!-- scenario name -->
+- **WHEN** <!-- condition -->
+- **THEN** <!-- expected outcome -->
+\`\`\`
+
+### design
+
+Create the design document that explains HOW to implement the change.
+
+When to include design.md (create only if any apply):
+- Cross-cutting change (multiple services/modules) or new architectural pattern
+- New external dependency or significant data model changes
+- Security, performance, or migration complexity
+- Ambiguity that benefits from technical decisions before coding
+
+Sections:
+- **Context**: Only the current state and constraints needed to explain the approach. Reference the proposal for motivation instead of restating it (e.g., "See proposal.md - Why").
+- **Goals / Non-Goals**: What this design achieves and explicitly excludes. Don't restate the proposal's scope - add only design-level boundaries.
+- **Decisions**: Key technical choices with rationale (why X over Y?). Include alternatives considered for each decision.
+- **Risks / Trade-offs**: Known limitations, things that could go wrong. Format: [Risk] → Mitigation
+- **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
+- **Open Questions**: Unknowns that can safely be answered later without
+  changing the specs, the approach, or the task breakdown. Omit if none.
+
+Open questions are for genuinely deferrable unknowns, not decisions you
+skipped. If a question would change the specs, the chosen approach, or
+the task breakdown, resolve it now - ask the user instead of guessing.
+
+Focus on architecture and approach, not line-by-line implementation.
+The proposal covers why and what; design covers how. Reference the
+proposal for motivation and, once written, the specs for requirements -
+if a section would only restate them, point to them instead.
+
+Good design docs explain the "why" behind technical decisions.
+
+Template:
+
+\`\`\`markdown
+# Design
+
+## Context
+
+<!-- Current state and constraints that shape the approach. See proposal.md for motivation - don't restate it -->
+
+## Goals / Non-Goals
+
+**Goals:**
+<!-- What this design aims to achieve -->
+
+**Non-Goals:**
+<!-- What is explicitly out of scope -->
+
+## Decisions
+
+<!-- Key design decisions with rationale and alternatives considered -->
+
+## Risks / Trade-offs
+
+<!-- Known risks and trade-offs -->
+\`\`\`
+
+## Contexto do projeto (restrição, não copie)
+
+Language: pt-BR
+"
+`;
